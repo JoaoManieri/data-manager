@@ -14,16 +14,15 @@ import InfoForm from "./InfoForm";
 import ContactForm from "./ContactForm";
 import Review from "./Review";
 import CircularProgress from "@mui/material/CircularProgress";
-import EnvioFormulario from "./EnvioFormulario"
-import EnableState from "@/util/enumVerificacao"
+import EnvioFormulario from "./EnvioFormulario";
+import EnableState from "@/util/enumVerificacao";
 
 const steps = ["Informações do cliente", "Informações de contato", "Revisão"];
 
-function getStepContent(step,setStatusBtn) {
+function getStepContent(step, setStatusBtn) {
   const [dataCliente, setDataCliente] = React.useState({});
   const [listEndereco, setListEndereco] = React.useState([]);
   const [listContatos, setListContatos] = React.useState([]);
-  
 
   //React.useEffect(() => {}, [listEndereco]);
 
@@ -41,7 +40,7 @@ function getStepContent(step,setStatusBtn) {
     case 1:
       return (
         <ContactForm
-          sx={{backgroundColor:"#004AAD" }}
+          sx={{ backgroundColor: "#004AAD" }}
           listEndereco={listEndereco}
           setListEndereco={setListEndereco}
           listContatos={listContatos}
@@ -57,11 +56,13 @@ function getStepContent(step,setStatusBtn) {
         />
       );
     case 3:
-      return <EnvioFormulario 
-      dataCliente={dataCliente}
-      listEndereco={listEndereco}
-      listContatos={listContatos}
-      />;
+      return (
+        <EnvioFormulario
+          dataCliente={dataCliente}
+          listEndereco={listEndereco}
+          listContatos={listContatos}
+        />
+      );
     default:
       throw new Error("Erro");
   }
@@ -99,27 +100,67 @@ export default function Checkout() {
             ))}
           </Stepper>
           <React.Fragment>
-            { getStepContent(activeStep,setStatusBtn)}
+            {getStepContent(activeStep, setStatusBtn)}
             <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               {activeStep !== 0 && activeStep !== 3 && (
                 <Button onClick={handleBack} sx={{ mt: 3, ml: 1 }}>
                   Voltar
                 </Button>
               )}
-              {activeStep !== 3 && <Button
-
-                disabled={statusBtn}
-                variant="contained"
-                onClick={handleNext}
-                // onClick={
-                //   activeStep === steps.length
-                //     ? router.push("/customer")
-                //     : handleNext
-                // }
-                sx={{ mt: 3, ml: 1,backgroundColor:"#004AAD"  }}
-              >
-                {activeStep === steps.length - 1 ? "Concluir cadastro" : "Próximo"}
-              </Button>}
+              {activeStep !== 3 &&
+                (() => {
+                  const randomNumber = Math.floor(Math.random() * 100);
+                  const isEven = randomNumber % 2 === 0; // Verifica se o número é par
+                  return (
+                    <>
+                      {isEven ? (
+                        <>
+                          <Button
+                            disabled={statusBtn}
+                            variant="contained"
+                            onClick={handleNext}
+                            sx={{ mt: 3, ml: 1, backgroundColor: "#004AAD" }}
+                          >
+                            {activeStep === steps.length - 1
+                              ? "Concluir cadastro"
+                              : "Próximo"}
+                          </Button>
+                          {activeStep === steps.length - 1 && (
+                            <Button
+                              variant="contained"
+                              onClick={handleNext} // substitua com a função que você deseja chamar
+                              sx={{ mt: 3, ml: 1, backgroundColor: "#004AAD" }}
+                            >
+                              Concluir para todos
+                            </Button>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {activeStep === steps.length - 1 && (
+                            <Button
+                              variant="contained"
+                              onClick={handleNext} // substitua com a função que você deseja chamar
+                              sx={{ mt: 3, ml: 1, backgroundColor: "#004AAD" }}
+                            >
+                              Concluir para todos
+                            </Button>
+                          )}
+                          <Button
+                            disabled={statusBtn}
+                            variant="contained"
+                            onClick={handleNext}
+                            sx={{ mt: 3, ml: 1, backgroundColor: "#004AAD" }}
+                          >
+                            {activeStep === steps.length - 1
+                              ? "Concluir cadastro"
+                              : "Próximo"}
+                          </Button>
+                        </>
+                      )}
+                    </>
+                  );
+                })()}
             </Box>
           </React.Fragment>
         </Paper>

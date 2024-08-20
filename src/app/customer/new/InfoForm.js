@@ -7,9 +7,9 @@ import TextField from "@mui/material/TextField";
 import clienteInstance from "@/helper/axios-instance";
 import Autocomplete from "@mui/material/Autocomplete";
 import top100Films from "./Users";
-import InputMask from "react-input-mask"
-import { cnpj as validateCnpj } from 'cpf-cnpj-validator'; 
-import EnableState from "@/util/enumVerificacao"
+import InputMask from "react-input-mask";
+import { cnpj as validateCnpj } from "cpf-cnpj-validator";
+import EnableState from "@/util/enumVerificacao";
 
 export default function InfoForm({
   setStatusBtn,
@@ -21,37 +21,39 @@ export default function InfoForm({
   const [clientData, setClientData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { cnpj, formState: { errors } } = useForm();
+  const {
+    cnpj,
+    formState: { errors },
+  } = useForm();
 
-
- 
-
- //
+  //
   const [campos, setCampos] = useState({
-      Nomefantazia: false,
-      razaoSocial: false,
-      areaAtuacao: false,
-      cnpj: false,
-      firstStatus: true
+    Nomefantazia: false,
+    razaoSocial: false,
+    areaAtuacao: false,
+    cnpj: false,
+    firstStatus: true,
   });
-  
 
   const handleChangeCNPJ = (event) => {
     const cnpj = event.target.value;
     setClientData({ ...clientData, cnpj });
   };
-  
+
   const validaBtn = (event) => {
-    if(campos.Nomefantazia == false && campos.razaoSocial ==false && campos.areaAtuacao==false && campos.cnpj==false && campos.firstStatus == false){
-     
-      setStatusBtn(EnableState.ENABLED)
-    }
-    else{
-      setStatusBtn(EnableState.DISABLED)
-      
+    if (
+      campos.Nomefantazia == false &&
+      campos.razaoSocial == false &&
+      campos.areaAtuacao == false &&
+      campos.cnpj == false &&
+      campos.firstStatus == false
+    ) {
+      setStatusBtn(EnableState.ENABLED);
+    } else {
+      setStatusBtn(EnableState.DISABLED);
     }
   };
-  
+
   useEffect(() => {
     setClientData(cliente);
   }, []);
@@ -71,32 +73,30 @@ export default function InfoForm({
   }
 
   const handleBlurCampoVazio = (event) => {
-    setCampos(prevState => ({...prevState,firstStatus: false}))
-    validaBtn()
+    setCampos((prevState) => ({ ...prevState, firstStatus: false }));
+    validaBtn();
     const valorCampo = event.target.value.trim();
     if (valorCampo === "") {
-      validaBtn()
-      return true
+      validaBtn();
+      return true;
     } else {
-      validaBtn()
-      return false
+      validaBtn();
+      return false;
     }
   };
 
   useEffect(() => {
-    setStatusBtn(EnableState.DISABLED)
+    setStatusBtn(EnableState.DISABLED);
   }, []);
 
-
-
   const handleBlurCNPJ = async (event) => {
-   // setCampos(prevState => ({...prevState,firstStatus: false}))
-    const meuCnpj = event.target.value.replace(/\D/g, '');
+    // setCampos(prevState => ({...prevState,firstStatus: false}))
+    const meuCnpj = event.target.value.replace(/\D/g, "");
     const cnpjValido = validateCnpj.isValid(meuCnpj);
     setCampos((prevState) => ({ ...prevState, cnpj: !cnpjValido }));
     validaBtn();
 
-    const save_cnpj = event.target.value
+    const save_cnpj = event.target.value;
 
     setClientData({ ...clientData, save_cnpj });
     setLoading(true);
@@ -105,25 +105,25 @@ export default function InfoForm({
 
       const enderecoDefault = [
         createDataEndereco(
-          response.data.cep ?? 'CEP não informado',
-          response.data.logradouro ?? 'Logradouro não informado',
-          response.data.numero ?? 'Número não informado',
-          response.data.bairro ?? 'Bairro não informado',
-          response.data.municipio ?? 'Município não informado',
-          response.data.uf ?? 'UF não informada'
+          response.data.cep ?? "CEP não informado",
+          response.data.logradouro ?? "Logradouro não informado",
+          response.data.numero ?? "Número não informado",
+          response.data.bairro ?? "Bairro não informado",
+          response.data.municipio ?? "Município não informado",
+          response.data.uf ?? "UF não informada"
         ),
       ];
-      
+
       const contatoDefault = [
         createDataContact(
-          response.data.nome ?? 'Nome não informado',
-          response.data.cargo ?? 'Cargo não informado',
-          response.data.email ?? 'Email não informado',
-          response.data.telefone ?? 'Telefone não informado',
-          response.data.celular ?? 'Celular não informado'
+          response.data.nome ?? "Nome não informado",
+          response.data.cargo ?? "Cargo não informado",
+          response.data.email ?? "Email não informado",
+          response.data.telefone ?? "Telefone não informado",
+          response.data.celular ?? "Celular não informado"
         ),
       ];
-      
+
       setListEndereco(enderecoDefault);
       setListContatos(contatoDefault);
       console.log(response.data);
@@ -146,7 +146,6 @@ export default function InfoForm({
 
   useEffect(() => {
     validaBtn();
-   
   }, [campos, clientData]);
 
   return (
@@ -155,17 +154,18 @@ export default function InfoForm({
         Informações do cliente
       </Typography>
       <Grid container spacing={3}>
-      <Grid item xs={12}>
-      <InputMask
+        <Grid item xs={12}>
+          <InputMask
             mask="99.999.999/9999-99"
             maskChar=" "
-            onChange={(event) => setClientData({ ...clientData, cnpj: event.target.value })}
+            onChange={(event) =>
+              setClientData({ ...clientData, cnpj: event.target.value })
+            }
             onBlur={handleBlurCNPJ}
             value={clientData ? clientData.cnpj : "12.095.067/0001-36"}
           >
             {() => (
               <TextField
-              
                 required
                 id="cnpj"
                 name="cnpj"
@@ -195,8 +195,12 @@ export default function InfoForm({
                 onChange={(e) =>
                   setClientData({ ...clientData, fantasia: e.target.value })
                 }
-                
-                onBlur={(e) =>  setCampos(prevState => ({...prevState,Nomefantazia: handleBlurCampoVazio(e)}))}
+                onBlur={(e) =>
+                  setCampos((prevState) => ({
+                    ...prevState,
+                    Nomefantazia: handleBlurCampoVazio(e),
+                  }))
+                }
               />
             </Grid>
 
@@ -216,14 +220,19 @@ export default function InfoForm({
                 onChange={(e) =>
                   setClientData({ ...clientData, nome: e.target.value })
                 }
-                onBlur={(e) =>  setCampos(prevState => ({...prevState,razaoSocial: handleBlurCampoVazio(e)}))}
+                onBlur={(e) =>
+                  setCampos((prevState) => ({
+                    ...prevState,
+                    razaoSocial: handleBlurCampoVazio(e),
+                  }))
+                }
               />
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={12}>
           <TextField
-          error={campos.areaAtuacao}
+            error={campos.areaAtuacao}
             required
             id="atividadePrincipal"
             name="atividadePrincipal"
@@ -237,7 +246,12 @@ export default function InfoForm({
                 atividadePrincipal: e.target.value,
               })
             }
-            onBlur={(e) =>  setCampos(prevState => ({...prevState,areaAtuacao: handleBlurCampoVazio(e)}))}
+            onBlur={(e) =>
+              setCampos((prevState) => ({
+                ...prevState,
+                areaAtuacao: handleBlurCampoVazio(e),
+              }))
+            }
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -283,15 +297,7 @@ export default function InfoForm({
           <Autocomplete
             disablePortal
             id="combo-box-demo"
-            options={[
-              "Peter Parker",
-              "Clark Kent",
-              "Bruce Wayne",
-              "Diana Prince",
-              "Barry Allen",
-              "Tony Stark ",
-              "DavSteve Rogers",
-            ]}
+            options={["Aline Camargo", "Ademir Garcia", "Valdir Solsa"]}
             fullWidth
             value={
               clientData && clientData.analistaDaContaUsuarioId
@@ -311,15 +317,7 @@ export default function InfoForm({
           <Autocomplete
             disablePortal
             id="combo-box-demo"
-            options={[
-              "Peter Parker",
-              "Clark Kent",
-              "Bruce Wayne",
-              "Diana Prince",
-              "Barry Allen",
-              "Tony Stark ",
-              "Steve Rogers",
-            ]}
+            options={["Aline Camargo", "Ademir Garcia", "Valdir Solsa"]}
             fullWidth
             value={
               clientData && clientData.gestorDaContaUsuarioId
